@@ -1,0 +1,56 @@
+import re
+def text_match(text):
+    text=text.replace(' ','')
+    pat='[A-Z][a-z]+'
+    r=re.findall(pat,text)
+    if r:
+        print('Found a match, the result is ')
+        return(r)
+    else:
+        return('Not matched')
+def match(t):
+    pat='\w*z.\W*'
+    r=re.findall(pat,t)
+    if r:
+        print('Found a match, the result is')
+        return(r)
+    else:
+        return('Not matched')
+def alphamatch(an):
+    pat='^[A-Z a-z 0-9 _]+'
+    r=re.search(pat,an)
+    if r:
+        print('Found a match')
+        return(r)
+    else:
+        return('Not matched')
+def remove_zero(ip):
+    s=re.sub('\.[0]*','.',ip)
+    print(s)
+
+i=0
+while(i<=4):
+    print("1-Search")
+    print("2-Match")
+    print("3-Uppercase")
+    print("4-Leading zero")
+    ch=input("Enter your choice: ")
+    if(ch=='1'):
+        s=input("Enter the string: ")
+        result=text_match(s)
+        print(result)
+    elif(ch=='2'):
+        s=input("Enter the string: ")
+        result=match(s)
+        print(result)
+    elif(ch=='3'):
+        s=input("Enter the string: ")
+        result=alphamatch(s)
+        print(result)
+    elif(ch=='4'):
+        s=input("Enter the string: ")
+        remove_zero(s)
+    else:
+        print("Enter the valid choice")
+        
+    
