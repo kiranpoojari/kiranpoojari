@@ -1,0 +1,20 @@
+class Error(Exception):
+    pass;
+class ValueTooSmallError(Error):
+    pass;
+class ValueTooLargeError(Error):
+    pass;
+n=10
+while True:
+    try:
+        newn=int(input("Enter the number: "))
+        if(newn<n):
+            raise ValueTooSmallError
+        elif(newn>n):
+            raise ValueTooLargeError
+        break;
+    except ValueTooSmallError:
+        print("Value is too small, try again")
+    except ValueTooLargeError:
+        print("Value is too large, try again")
+print("Guess is correct")
