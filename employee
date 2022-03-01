@@ -1,0 +1,79 @@
+import mysql.connector
+
+mydb=mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="employee"
+)
+
+cursor=mydb.cursor()
+cursor.execute("DROP TABLE IF EXISTS emp")
+sql="""CREATE TABLE emp(
+ENO INT NOT NULL,
+NAME CHAR(20),
+SAL INT)
+"""
+
+cursor.execute(sql)
+def accept(eno,n,s):
+    cursor=mydb.cursor()
+    sql="""Insert into emp(ENO,NAME,SAL) values('%d','%s','%d')"""
+    args=(eno,n,s)
+    try:
+        cursor.execute(sql %args)
+        mydb.commit()
+        print("1 row inserted")
+    except:
+        mydb.rollback()
+
+def select(eno):
+    sql="select * from emp where ENO='%d'"%(eno)
+    cursor.execute(sql)
+    row=cursor.fetchone()
+    if row:
+        print(row)
+    else:
+        print("eno does not exist")
+    mydb.commit()
+
+def display(st,end):
+    Select="select * from emp where Sal>='%d' and Sal<='%d'"%(st,end)
+    cursor.execute(Select)
+    result=cursor.fetchall()
+    if(result):
+        for row in result:
+            print(row)
+    else:
+        print("No records available in this range")
+i=0
+while(i<=3):
+    print("1->Accept")
+    print("2->Display_one")
+    print("3->Range")
+    ch=int(input("Enter your choice :"))
+    if(ch==1):
+        n=int(input("How many rows? :"))
+        for i in range(n):
+            eno=int(input("Enter the eno :"))
+            Select="select * from emp where ENO='%d'"%(eno)
+            cursor.execute(Select)
+            result=cursor.fetchall()
+            if result:
+                print("Record already exist")
+            else:
+                nm=input("Enter the name :")
+                sal=int(input("Enter the salary :"))
+                accept(eno,nm,sal)
+                print("-----------------------------------------------------------")
+    elif(ch==2):
+        e=int(input("Enter eno :"))
+        select(e)
+    elif(ch==3):
+        s=int(input("Enter the starting range :"))
+        e=int(input("Enter the ending range :"))
+        display(s,e)
+    else:
+        print("Invalid choice")
+        break
+mybd.close()
