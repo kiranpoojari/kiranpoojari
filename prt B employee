@@ -1,0 +1,41 @@
+class Employee:
+    def __init__(self,e,n,dp,dg,ag,sal):
+        self.eno=e
+        self.name=n
+        self.dept=dp
+        self.desg=dg
+        self.age=ag
+        self.salary=sal
+    def display(self):
+        print(self.eno,"\t\t",self.name,"\t\t",self.dept,"\t\t",self.desg,"\t\t",self.age,"\t\t",self.salary,"\n");
+    def search(self,eno):
+        if(eno==self.eno):
+            return True
+        else:
+            return False
+n=int(input("enter total number of employees"))
+l=[]
+for i in range(n):
+    print("enter employee details")
+    eno=int(input("Employee number"))
+    name=input("employee name")
+    dept=input("employee department")
+    desg=input("employee designation")
+    age=input("employee age");
+    salary=input("enter the salarty")
+    k=Employee(eno,name,dept,desg,age,salary)
+    l.append(k)
+print("*********Employee details are*********\n")
+print("Emplyee number \t\t EMployee name\t\t department\t\t designation \t\tage\t\tsalary\n")
+for obj in l:
+    obj.display()
+eno=int(input("enter id u want to search"))
+found=False
+for obj in l:
+    found=obj.search(eno)
+    if(found):
+        print("employee number exist and details are\n");
+        obj.display()
+        break;
+if(not found):
+    print("employee not exist")
