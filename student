@@ -1,0 +1,78 @@
+import mysql.connector
+mydb=mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="student"
+    )
+cursor=mydb.cursor()
+cursor.execute("DROP TABLE IF EXISTS student")
+sql=""" CREATE TABLE student(
+REGNO INT NOT NULL,
+NAME CHAR(20),
+MARKS1 INT,
+MARKS2 INT,
+MARKS3 INT)"""
+cursor.execute(sql)
+def accept(rno,nm,m1,m2,m3):
+    cursor=mydb.cursor()
+    sql="Insert into student(REGNO,NAME,MARKS1,MARKS2,MARKS3)value('%d','%s','%d','%d','%d')"
+    args=(rno,nm,m1,m2,m3)
+    try:
+        cursor.execute(sql %args)
+        mydb.commit()
+        print("1 row inserted")
+    except:
+        mydb.rollback()
+def deleted(rno):
+    delete="Delete from student where REGNO='%d'"%(rno)
+    cursor.execute(delete)
+    mydb.commit()
+    print("1 row deletd")
+def displayed():
+    select="select * from student"
+    cursor.execute(select)
+    result=cursor.fetchall()
+    if(result):
+        print("ROLLNO\t\tNAME\t\tMARK1\t\tMARK2\t\tMARK3")
+        print("**********************************************************************")
+        for row in result:
+            print(row[0],"\t\t",row[1],"\t\t",row[2],"\t\t",row[3],"\t\t",row[4])
+        print("**********************************************************************")
+    else:
+        print("No records available")
+        
+i=0
+while(i<=3):
+     print("1-> Accept")
+     print("2-> Display")
+     print("3-> Delete")
+     ch=int(input("Enter your choice :"))
+     if(ch==1):
+            n=int(input("How many rows :"))
+            for i in range(n):
+                rno=int(input("Enter the regno :"))
+                nm=input("Enter the name :")
+                m1=int(input("Enter the marks1 :"))
+                m2=int(input("Enter the marks2 :"))
+                m3=int(input("Enter the marks3 :"))
+                accept(rno,nm,m1,m2,m3)
+                print("**********************************************************************")
+     elif(ch==2):
+        displayed()
+     elif(ch==3):
+        select="select * from student"
+        cursor.execute(select)
+        result=cursor.fetchall()
+        if(result):
+            rno=int(input("Enter the regno :"))
+            deleted(rno)
+        else:
+            print("Table is empty")
+     else:
+        print("Invalid choice")
+        break;
+mydb.close()
+                
+     
+        
