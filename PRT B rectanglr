@@ -1,0 +1,33 @@
+class Rectangle:
+    def __init__(self,length,width):
+        self.length=length
+        self.width=width
+
+    def area(self):
+        return self.length*self.width
+    def perimeter(self):
+        perimeter=(self.length+self.width)*2
+        print("perimeter of rectangle object =%.2f"%perimeter)
+class  Box(Rectangle):
+    def __init__(self,l=0,w=0):
+        self.x=l
+        super().__init__(l,w)
+    def volume(self):
+        return self.x*self.x*self.x
+    def perimeter(self):
+        super().perimeter()
+        return 4*self.x
+print("********************************\n")
+l,w=[float (x) for x in input("please enter two measurements").split()]
+print("*********************************\n")
+obj1=Box(l,w)
+area=obj1.area()
+print("**********Rectangle****************\n")
+print("area of rectangle object=%.2f"%area)
+vol=obj1.volume()
+perimeter=obj1.perimeter()
+print("********************\n")
+print("**************Box**************\n");
+print("Volume of box object =%.2f"%vol)
+print("perimter of box object =%.2f"%perimeter)
+print("************************************")
