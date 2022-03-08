@@ -1,0 +1,115 @@
+using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using System.Data.SqlClient;
+namespace Program2
+{
+    public partial class _Default : System.Web.UI.Page
+    {
+        SqlConnection cn = new SqlConnection();
+        SqlDataAdapter sdr = new SqlDataAdapter();
+        SqlCommand cmd = new SqlCommand();
+        DataTable dt = new DataTable();
+        string qry;
+        public Boolean exist(string TNO)
+        {
+            cmd.CommandText="select * from T_DETAIL where TNO='"+TNO+"'";
+            cmd.Connection=cn;
+            sdr.SelectCommand=cmd;
+            cmd.ExecuteNonQuery();
+            sdr.Fill(dt);
+            if(dt.Rows.Count==0)
+            {
+                return false;
+            }
+            return true;
+        }
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            cn.ConnectionString = SqlDataSource1.ConnectionString;
+            cn.Open();
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("WebForm2.aspx");
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            string telno;
+            string cnam,cadd;
+            telno=TextBox1.Text;
+            cnam=TextBox2.Text;
+            cadd=TextBox3.Text;
+            if(exist(telno))
+            {
+                Response.Write("<script type=\"text/javascript\">alert('Telephone no already exist');</script>");
+            }
+            else
+            {
+                qry="insert into T_DETAIL values('"+telno+"','"+cnam+"','"+cadd+"')";
+                cmd.CommandText=qry;
+                cmd.Connection=cn;
+                cmd.ExecuteNonQuery();
+                Response.Write("<script type=\"text/javascript\">alert('Record Inserted');</script>");
+            }
+            TextBox1.Text="";
+            TextBox2.Text="";
+            TextBox3.Text="";
+            cn.Close();
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            string tno;
+            tno = inHide.Value;
+            if (exist(tno))
+            {
+                TextBox1.Text = dt.Rows[0][0].ToString();
+                TextBox2.Text = dt.Rows[0][1].ToString();
+                TextBox3.Text = dt.Rows[0][2].ToString();
+                Button2.Visible = false;
+                Button4.Visible = true;
+            }
+            else
+            {
+                Response.Write("<script type=\"text/javascript\">alert('Record does not exist');</script>");
+            }
+        }
+
+        protected void Button4_Click(object sender, EventArgs e)
+        {
+            string tno;
+            tno = inHide.Value;
+            string rslt;
+            rslt = inDel.Value;
+            if (rslt == "true")
+            {
+                cmd.CommandText = "delete from T_DETAIL where TNO='" + tno + "'";
+                sdr.DeleteCommand = cmd;
+                cmd.Connection = cn;
+                cmd.ExecuteNonQuery();
+                Response.Write("<script type=\"text/javascript\">alert('Record Deleted');</script>");
+                cn.Close();
+                TextBox1.Text = "";
+                TextBox2.Text = "";
+                TextBox3.Text = "";
+            }
+            else
+            {
+                Response.Redirect("Webform1.aspx");
+            }
+        }
+    }
+}
+        
