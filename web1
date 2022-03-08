@@ -1,0 +1,116 @@
+using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using System.Data.SqlClient;
+
+namespace Program_1
+{
+    public partial class _Default : System.Web.UI.Page
+    {
+        SqlConnection cn = new SqlConnection();
+        SqlDataAdapter sdr = new SqlDataAdapter();
+        SqlCommand cmd = new SqlCommand();
+        DataTable dt = new DataTable();
+        int cid;
+        string qry;
+        public Boolean validate()
+        {
+            if((!(RadioButton1.Checked)&&!(RadioButton2.Checked)))
+            {
+                Response.Write("<script type=\"text/javascript\">alert('Please select gender');</script>");
+                return false;
+            }
+            Boolean chkd = false;
+            for(int i=0;i<CheckBoxList1.Items.Count;i++)
+            {
+                if(CheckBoxList1.Items[i].Selected)
+                    chkd=true;
+            }
+            if(chkd==false)
+            {
+                Response.Write("<script type=\"text/javascript\">alert('Please select atleast one of the skill');</script>");
+                return false;
+            }
+            return true;
+        }
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            cn.ConnectionString = SqlDataSource1.ConnectionString;
+            cn.Open();
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            if (validate())
+            {
+                string GENDER = "", SKILL = "";
+                if (RadioButton1.Checked)
+                    GENDER = RadioButton1.Text;
+                else if (RadioButton2.Checked)
+                    GENDER = RadioButton2.Text;
+                for (int i = 0; i < CheckBoxList1.Items.Count; i++)
+                {
+                    if (CheckBoxList1.Items[i].Selected)
+                        SKILL = SKILL + CheckBoxList1.Items[i].Value + ",";
+                }
+                qry = "Insert into C_INFO values(" + TextBox1.Text + ",'" + TextBox2.Text + "','" + TextBox3.Text + "','" + GENDER + "','" + TextBox4.Text + "','" + DropDownList1.SelectedItem.ToString() + "'," + TextBox5.Text + ",'" + SKILL + "','" + TextBox6.Text + "'," + TextBox7.Text + ")";
+                cmd.CommandText = qry;
+                cmd.Connection = cn;
+                cmd.ExecuteNonQuery();
+                Response.Write("<script type=\"text/javascript\">alert('Record Inserted');</script>");
+                Button2.Enabled  = true;
+                Button1.Enabled = false;
+                Button3.Enabled = true;
+            }
+            cn.Close();
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            cmd.CommandText = "Select * from C_INFO";
+            cmd.Connection = cn;
+            sdr.SelectCommand = cmd;
+            cmd.ExecuteNonQuery();
+            sdr.Fill(dt);
+            if (dt.Rows.Count == 0)
+                cid = 1000;
+            else
+            {
+                SqlCommand cmd1 = new SqlCommand();
+                SqlDataAdapter sdr1 = new SqlDataAdapter();
+                DataTable dt1 = new DataTable();
+                cmd1.CommandText = "Select MAX(CID) from C_INFO";
+                sdr1.SelectCommand = cmd1;
+                cmd1.Connection = cn;
+                cmd1.ExecuteNonQuery();
+                sdr1.Fill(dt1);
+                cid = int.Parse(dt1.Rows[0][0].ToString());
+                cid = cid + 1;
+            }
+            TextBox1.Text = cid.ToString();
+            TextBox2.Text = "";
+            TextBox3.Text = "";
+            TextBox4.Text = "";
+            TextBox5.Text = "";
+            TextBox6.Text = "";
+            TextBox7.Text = "";
+            Button1.Enabled = true;
+            Button2.Enabled = false;
+            cn.Close();
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("WebForm1.aspx");
+        }
+    }
+}
