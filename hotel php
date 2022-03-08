@@ -1,0 +1,205 @@
+
+
+
+
+<?php
+$con=mysqli_connect('localhost','root','','sak');
+$result=mysqli_query($con,"SELECT * FROM room where status='Available'");
+echo"<h1>Available Rooms</h1>";
+echo"<table border='1'>
+<tr>
+<th>Room Number</th>
+</tr>";
+while($row=mysqli_fetch_array($result))
+{
+	echo"<tr>";
+	echo"<td>".$row['roomno']."</td>";
+	echo"</tr>";
+}
+echo"</table>";
+?>
+
+
+chech in
+
+<?php
+if(isset($_POST['submit'])){
+	$rno=$_POST['rno'];
+	$date1=$_POST['date1'];
+	echo"<form target='_self'>";
+	echo"<font size='6'>";
+	@$cn=new mysqli('localhost','root','','sak');
+	if($cn->connect_error)
+	{
+		echo"Could not connect";
+		exit;
+	}
+	$qry="select * from room where roomno='$rno'";
+	$rslt=$cn->query($qry);
+	if($rslt->num_rows!=0)
+	{
+		$qry="select * from room where roomno='$rno' and status='Booked'";
+		$rslt=$cn->query($qry);
+		$nub=$rslt->num_rows;
+		if($nub>=1)
+		{
+			echo"Already booked!!!";
+		}
+		else
+		{
+			$uqry="update room set status='Booked',checkindate='$date1' where roomno='$rno'";
+			$rslt=$cn->query($uqry);
+			if($rslt)
+			{
+				echo"<script>alert('Thanks for check in');</script>";
+				echo"<script>window.location='checkin.php';</script>";
+			}
+			
+		}
+		
+		echo"</font></form>";
+		$cn->close();
+	}
+	else
+		    {
+			  echo"<br>Not found!!!";
+		      }
+
+}
+?>
+
+<html>
+<body>
+<form action="" method="POST">
+<h1>Check in</h1>
+<label>Enter the room</label>
+<input type="text" name="rno" required><br><br>
+<label>Select the date to check in</label>
+<input type="date" name="date1" required><br><br>
+<input type="submit" name="submit">
+</form>
+</body>
+</html>
+
+
+<html>
+<body>
+<form action="" method="POST">
+<h1>Check Out</h1>
+<label>Enter the rrom</label>
+<input type="text" name="rno" required><br><br>
+<label>Select the date to checkout</label>
+<input type="date" name="date1" required><br><br>
+<input type="submit" name="submit">
+</form>
+</body>
+</html>
+
+chech out
+
+<?php
+if(isset($_POST['submit'])){
+	$rno=$_POST['rno'];
+	$date1=$_POST['date1'];
+	echo"<form target='_self'>";
+	echo"<font size='6'>";
+	@$cn=new mysqli('localhost','root','','sak');
+	if($cn->connect_error)
+	{
+		echo"Could not connect";
+		exit;
+	}
+	$qry="select * from room where roomno='$rno'";
+	$rslt=$cn->query($qry);
+	if($rslt->num_rows!=0)
+	{
+		$qry="select * from room where roomno='$rno' and status='Available'";
+		$rslt=$cn->query($qry);
+		$nob=$rslt->num_rows;
+		if($nob>=1)
+		{
+			echo"Room is not booked";
+		}
+		else
+		{
+			$uqry="update room set status='Available', checkoutdate='date1' where roomno='$rno'";
+			$rslt=$cn->query($uqry);
+			if($rslt)
+			{
+				echo"<br><br><b><center>Thanks for checkout</center></b>";
+			}
+		}
+	
+	}
+	echo"</font></form>";
+		$cn->close();	
+}
+
+
+	
+	
+?>	
+
+
+
+
+
+order php
+
+<html>
+<head>
+<title>Room booking</title>
+</head>
+<body>
+<form name="room" action="order2.php" method="POST">
+<h1><center>Add room details</center></h1>
+<table border="1" align="center" style="font_size:25px;">
+<tr align="left"><th>Room no</th><th>
+<input type="text" name="rno" required style="height:30px;width:300px;"></th></tr>
+<tr align="left"><th>Room type</th>
+	<th><select name="sel" id="sel">
+		<option value="AC">AC</option>
+		<option value="Non AC">Non AC</option>
+		<option value="Single Semi">Single Semi</option>
+		<option value="Single Delux">Single Delux</option>
+	</select></th></tr>
+<tr align="left"><th>Capacity</th><th>
+<input type="text" name="capacity" required style="height:30px;width:300px;"></th></tr>
+<tr align="left"><th>Status</th>
+	<th><select name="status" id="sel">
+		<option value="Available">Available</option>
+		<option value="Booked">Booked</option>
+	</select></th></tr>
+</table><br><br>
+<center><input type="submit" name="submit" style="height:40px;width:80px;"></center>
+</body>
+</html>
+
+
+<?php
+
+if(isset($_POST['submit'])){
+	$rno=$_POST['rno'];
+	$sel=$_POST['sel'];
+	$capacity=$_POST['capacity'];
+	$status=$_POST['status'];
+	@$cn=new mysqli('localhost','root','','sak');
+	if($cn->connect_error)
+	{
+		echo"Could not connect";
+		exit;
+	}
+	$qry="insert into room(roomno,type,capacity,status)values('.$rno.','".$sel."','.$capacity.','".$status."')";
+	$rslt=$cn->query($qry);
+	if(!$rslt)
+	{
+		echo"<h3>Already Exists!!!</h3><br>";
+	}
+	else
+	{
+		echo"<h3>Record successfully inserted</h3><br>";
+	}
+	$cn->close();
+}
+?>
+	
