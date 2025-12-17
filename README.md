@@ -57,13 +57,7 @@
 - Used **Postman** for API testing, debugging, and documentation
 - Industry experience as a **Software Developer Intern (TechCiti Technologies)**
 
----
 
-## 📊 GitHub Stats
-
-![Kiran's GitHub Stats](https://github-readme-stats.vercel.app/api?username=kiranpoojari&show_icons=true&theme=dark&hide_border=true)
-
----
 
 ## 🔥 GitHub Streak
 
