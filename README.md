@@ -62,11 +62,6 @@
 
 
 
-## 🔥 GitHub Streak
-
-![GitHub Streak](https://streak-stats.demolab.com?user=kiranpoojari&theme=dark&hide_border=true)
-
----
 
 ## 📈 Most Used Languages
 
